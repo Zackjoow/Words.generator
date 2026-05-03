@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced English Word Generator</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.word {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.definition {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.example {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Advanced English Word</h1>
+
+  <div class="word" id="word">Click below</div>
+  <div class="definition" id="definition"></div>
+  <div class="example" id="example"></div>
+
+  <button onclick="generateWord()">New Word</button>
+  <button onclick="speakWord()">Pronounce</button>
+</div>
+
+<script>
+const words = [
+  {
+    word: "Aberration",
+    definition: "A departure from what is normal or expected.",
+    example: "The sudden drop in sales was an aberration."
+  },
+  {
+    word: "Capitulate",
+    definition: "To surrender or give in after resistance.",
+    example: "He refused to capitulate under pressure."
+  },
+  {
+    word: "Debilitate",
+    definition: "To make someone weak or infirm.",
+    example: "The illness debilitated him for weeks."
+  },
+  {
+    word: "Enervate",
+    definition: "To drain energy or vitality.",
+    example: "The heat enervated the workers."
+  },
+  {
+    word: "Fastidious",
+    definition: "Very attentive to detail; hard to please.",
+    example: "She is fastidious about cleanliness."
+  },
+  {
+    word: "Gregarious",
+    definition: "Fond of company; sociable.",
+    example: "He is a gregarious and friendly person."
+  },
+  {
+    word: "Harangue",
+    definition: "A long and aggressive speech.",
+    example: "The teacher gave a harsh harangue."
+  },
+  {
+    word: "Iconoclast",
+    definition: "A person who attacks established beliefs.",
+    example: "He was known as an iconoclast."
+  },
+  {
+    word: "Juxtapose",
+    definition: "To place side by side for comparison.",
+    example: "The artist juxtaposed light and dark."
+  },
+  {
+    word: "Lethargic",
+    definition: "Sluggish or lacking energy.",
+    example: "He felt lethargic after the meal."
+  },
+  {
+    word: "Mollify",
+    definition: "To calm or soothe anger.",
+    example: "She tried to mollify the upset client."
+  },
+  {
+    word: "Nefarious",
+    definition: "Wicked or criminal.",
+    example: "The villain had nefarious plans."
+  }
+];
+
+let currentWord = null;
+
+function generateWord() {
+  const randomIndex = Math.floor(Math.random() * words.length);
+  currentWord = words[randomIndex];
+
+  document.getElementById("word").textContent = currentWord.word;
+  document.getElementById("definition").textContent = currentWord.definition;
+  document.getElementById("example").textContent = currentWord.example;
+}
+
+function speakWord() {
+  if (!currentWord) return;
+
+  const speech = new SpeechSynthesisUtterance(currentWord.word);
+  speech.lang = "en-US";
+  speech.rate = 0.9;
+
+  window.speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
