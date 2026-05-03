@@ -7,7 +7,7 @@
 
 <style>
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #f4f6f8;
   display: flex;
   justify-content: center;
@@ -24,35 +24,55 @@ body {
 }
 
 .word {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
   margin: 10px 0;
+  color: #2c3e50;
 }
 
 #definition {
-  margin-bottom: 5px;
-  color: #333;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #34495e;
 }
 
 .example {
   font-style: italic;
-  color: #555;
-  margin-bottom: 15px;
+  color: #7f8c8d;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  margin-bottom: 20px;
 }
 
 button, select {
   margin: 5px;
-  padding: 8px 15px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #bdc3c7;
+  background: #ecf0f1;
   cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #dbe2e4;
 }
 
 .saved {
   margin-top: 20px;
   text-align: left;
-  max-height: 150px;
+  max-height: 200px;
   overflow-y: auto;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+  border-top: 2px solid #eee;
+  padding-top: 15px;
+}
+
+.saved-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
 }
 </style>
 </head>
@@ -84,7 +104,8 @@ button, select {
 </div>
 
 <script>
-// Your clean word list
+// Merged list with all your new additions. 
+// No "filler" code exists here to prevent numbers appearing next to words.
 const words = [
   {"word":"ameliorate","level":"C2","definition":"to improve a difficult situation","example":"Policies aim to ameliorate housing conditions."},
   {"word":"circumvent","level":"C2","definition":"to avoid rules through clever means","example":"They circumvented strict regulations."},
@@ -184,7 +205,150 @@ const words = [
   {"word":"commence","level":"C1","definition":"to begin","example":"Work commenced early."},
   {"word":"compel","level":"C1","definition":"to force or oblige","example":"Evidence compels action."},
   {"word":"complacent","level":"C2","definition":"self-satisfied","example":"They grew complacent."},
-  {"word":"concede","level":"C1","definition":"to admit reluctantly","example":"He conceded defeat."}
+  {"word":"concede","level":"C1","definition":"to admit reluctantly","example":"He conceded defeat."},
+  {"word":"conducive","level":"C2","definition":"making a situation likely or possible","example":"A quiet space is conducive to study."},
+  {"word":"confine","level":"C1","definition":"to limit within boundaries","example":"The discussion was confined to basics."},
+  {"word":"conform","level":"C1","definition":"to follow rules or standards","example":"They conform to guidelines."},
+  {"word":"contemplate","level":"C1","definition":"to think deeply about","example":"She contemplated the decision."},
+  {"word":"contentious","level":"C2","definition":"likely to cause disagreement","example":"The issue is contentious."},
+  {"word":"contradict","level":"C1","definition":"to say the opposite","example":"His statement contradicts facts."},
+  {"word":"contrive","level":"C2","definition":"to create in a forced way","example":"The excuse seemed contrived."},
+  {"word":"converge","level":"C2","definition":"to come together","example":"Ideas converge over time."},
+  {"word":"converse","level":"C1","definition":"to talk informally","example":"They conversed for hours."},
+  {"word":"convincing","level":"C1","definition":"able to persuade","example":"Her argument was convincing."},
+  {"word":"corroborate","level":"C2","definition":"to confirm with evidence","example":"Data corroborates the claim."},
+  {"word":"credible","level":"C1","definition":"believable","example":"The source is credible."},
+  {"word":"crucial","level":"C1","definition":"extremely important","example":"Timing is crucial."},
+  {"word":"culminate","level":"C2","definition":"to reach a final point","example":"The event culminated in success."},
+  {"word":"cumulative","level":"C2","definition":"increasing over time","example":"Costs are cumulative."},
+  {"word":"daunting","level":"C2","definition":"intimidating","example":"The task felt daunting."},
+  {"word":"decisive","level":"C1","definition":"able to decide quickly","example":"She made a decisive move."},
+  {"word":"deduce","level":"C1","definition":"to reach a conclusion","example":"He deduced the answer."},
+  {"word":"definitive","level":"C2","definition":"final and authoritative","example":"This is the definitive version."},
+  {"word":"deliberate","level":"C1","definition":"done intentionally","example":"It was a deliberate act."},
+  {"word":"demonstrate","level":"C1","definition":"to show clearly","example":"The study demonstrates impact."},
+  {"word":"denote","level":"C2","definition":"to indicate","example":"The symbol denotes value."},
+  {"word":"depict","level":"C1","definition":"to represent","example":"The image depicts history."},
+  {"word":"deprive","level":"C1","definition":"to take something away","example":"They were deprived of rights."},
+  {"word":"derogatory","level":"C2","definition":"showing disrespect","example":"He made derogatory remarks."},
+  {"word":"designate","level":"C2","definition":"to assign officially","example":"She was designated leader."},
+  {"word":"deterrent","level":"C2","definition":"something that discourages","example":"Fines act as deterrents."},
+  {"word":"detrimental","level":"C1","definition":"harmful","example":"Smoking is detrimental."},
+  {"word":"deviate","level":"C2","definition":"to depart from a path","example":"He deviated from plan."},
+  {"word":"diligent","level":"C1","definition":"hardworking and careful","example":"She is diligent."},
+  {"word":"discern","level":"C2","definition":"to perceive clearly","example":"He discerned a pattern."},
+  {"word":"disclose","level":"C1","definition":"to reveal","example":"They disclosed information."},
+  {"word":"discrepancy","level":"C2","definition":"a difference","example":"A discrepancy appeared."},
+  {"word":"discrete","level":"C2","definition":"separate and distinct","example":"Data points are discrete."},
+  {"word":"discretion","level":"C2","definition":"careful judgment","example":"Use discretion wisely."},
+  {"word":"disparity","level":"C2","definition":"a great difference","example":"Income disparity increased."},
+  {"word":"distinct","level":"C1","definition":"clearly different","example":"Two distinct approaches."},
+  {"word":"distort","level":"C2","definition":"to twist meaning","example":"Media distorted facts."},
+  {"word":"diverge","level":"C2","definition":"to move apart","example":"Opinions diverge."},
+  {"word":"diverse","level":"C1","definition":"showing variety","example":"The group is diverse."},
+  {"word":"dominate","level":"C1","definition":"to control strongly","example":"They dominate the market."},
+  {"word":"drastic","level":"C1","definition":"extreme","example":"Drastic changes occurred."},
+  {"word":"dwindle","level":"C2","definition":"to shrink gradually","example":"Resources dwindled."},
+  {"word":"dynamic","level":"C1","definition":"constantly changing","example":"The system is dynamic."},
+  {"word":"elaborate","level":"C1","definition":"to explain in detail","example":"She elaborated her idea."},
+  {"word":"elusive","level":"C2","definition":"hard to find","example":"The answer is elusive."},
+  {"word":"empirical","level":"C2","definition":"based on observation","example":"Empirical data supports this."},
+  {"word":"enforce","level":"C1","definition":"to make obey rules","example":"Laws are enforced."},
+  {"word":"enhance","level":"C1","definition":"to improve quality","example":"Features enhance usability."},
+  {"word":"enigma","level":"C2","definition":"something difficult to understand","example":"His behavior remains an enigma."},
+  {"word":"entail","level":"C1","definition":"to involve as necessary part","example":"The job entails long hours."},
+  {"word":"entice","level":"C2","definition":"to attract by offering pleasure","example":"Discounts entice customers."},
+  {"word":"enumerate","level":"C2","definition":"to list items one by one","example":"He enumerated the reasons."},
+  {"word":"equate","level":"C1","definition":"to consider equal","example":"They equate success with wealth."},
+  {"word":"eradicate","level":"C2","definition":"to remove completely","example":"Efforts eradicate disease."},
+  {"word":"erroneous","level":"C2","definition":"incorrect","example":"The claim is erroneous."},
+  {"word":"escalate","level":"C1","definition":"to increase rapidly","example":"Tensions escalated quickly."},
+  {"word":"evaluate","level":"C1","definition":"to assess value","example":"They evaluate performance."},
+  {"word":"evoke","level":"C2","definition":"to bring to mind","example":"The image evokes memories."},
+  {"word":"exceed","level":"C1","definition":"to go beyond limits","example":"Costs exceeded expectations."},
+  {"word":"exclude","level":"C1","definition":"to leave out","example":"He was excluded from the list."},
+  {"word":"exemplify","level":"C2","definition":"to illustrate clearly","example":"This case exemplifies success."},
+  {"word":"exert","level":"C2","definition":"to apply effort","example":"He exerted pressure."},
+  {"word":"exhibit","level":"C1","definition":"to show clearly","example":"The results exhibit patterns."},
+  {"word":"explicit","level":"C1","definition":"clearly expressed","example":"Instructions are explicit."},
+  {"word":"exploit","level":"C2","definition":"to use unfairly","example":"They exploited workers."},
+  {"word":"facilitate","level":"C1","definition":"to make easier","example":"Tools facilitate learning."},
+  {"word":"feasible","level":"C1","definition":"possible to achieve","example":"The plan is feasible."},
+  {"word":"fluctuate","level":"C1","definition":"to change frequently","example":"Prices fluctuate daily."},
+  {"word":"formulate","level":"C1","definition":"to create methodically","example":"They formulated a strategy."},
+  {"word":"futile","level":"C2","definition":"having no effect","example":"Efforts proved futile."},
+  {"word":"generate","level":"C1","definition":"to produce","example":"The system generates reports."},
+  {"word":"genuine","level":"C1","definition":"real and authentic","example":"Her concern is genuine."},
+  {"word":"hypothesis","level":"C1","definition":"proposed explanation","example":"The hypothesis was tested."},
+  {"word":"hypothetical","level":"C2","definition":"based on assumption","example":"Consider a hypothetical case."},
+  {"word":"identify","level":"C1","definition":"to recognize","example":"They identified the issue."},
+  {"word":"illustrate","level":"C1","definition":"to explain with examples","example":"Examples illustrate the point."},
+  {"word":"immerse","level":"C2","definition":"to involve deeply","example":"He immersed himself in study."},
+  {"word":"impact","level":"C1","definition":"strong effect","example":"The change had impact."},
+  {"word":"imply","level":"C1","definition":"to suggest indirectly","example":"His tone implies doubt."},
+  {"word":"incentive","level":"C1","definition":"a motivating factor","example":"Bonus acts as incentive."},
+  {"word":"incidence","level":"C2","definition":"rate of occurrence","example":"Incidence increased."},
+  {"word":"incline","level":"C2","definition":"to tend toward","example":"He inclines to agree."},
+  {"word":"incorporate","level":"C1","definition":"to include","example":"They incorporated feedback."},
+  {"word":"inevitable","level":"C1","definition":"certain to happen","example":"Change is inevitable."},
+  {"word":"infer","level":"C1","definition":"to conclude from evidence","example":"We infer meaning."},
+  {"word":"inhibit","level":"C2","definition":"to restrain","example":"Fear inhibits growth."},
+  {"word":"initiate","level":"C1","definition":"to begin","example":"They initiated action."},
+  {"word":"innovative","level":"C1","definition":"introducing new ideas","example":"An innovative solution."},
+  {"word":"insight","level":"C1","definition":"deep understanding","example":"The report offers insight."},
+  {"word":"integrate","level":"C1","definition":"to combine into whole","example":"Systems integrate smoothly."},
+  {"word":"intense","level":"C1","definition":"strong in degree","example":"The debate was intense."},
+  {"word":"intricate","level":"C2","definition":"complex in detail","example":"An intricate design."},
+  {"word":"intuitive","level":"C2","definition":"understood instinctively","example":"The interface is intuitive."},
+  {"word":"invoke","level":"C2","definition":"to call upon","example":"They invoked a rule."},
+  {"word":"irrelevant","level":"C1","definition":"not related","example":"The point is irrelevant."},
+  {"word":"isolate","level":"C1","definition":"to separate","example":"They isolated variables."},
+  {"word":"iterate","level":"C2","definition":"to repeat process","example":"They iterated designs."},
+  {"word":"jeopardy","level":"C2","definition":"risk of harm or loss","example":"The plan put jobs in jeopardy."},
+  {"word":"judicious","level":"C2","definition":"showing good judgment","example":"He made a judicious choice."},
+  {"word":"keen","level":"C1","definition":"eager or enthusiastic","example":"He is keen to learn."},
+  {"word":"legitimate","level":"C1","definition":"lawful or valid","example":"A legitimate concern."},
+  {"word":"lenient","level":"C2","definition":"not strict","example":"The teacher was lenient."},
+  {"word":"manifest","level":"C2","definition":"to show clearly","example":"The problem manifested quickly."},
+  {"word":"manipulate","level":"C1","definition":"to control skillfully","example":"They manipulated the data."},
+  {"word":"marginal","level":"C2","definition":"small or insignificant","example":"A marginal difference."},
+  {"word":"methodical","level":"C2","definition":"done in an orderly way","example":"He is methodical."},
+  {"word":"minimize","level":"C1","definition":"to reduce to smallest amount","example":"They minimized risks."},
+  {"word":"modify","level":"C1","definition":"to change slightly","example":"The plan was modified."},
+  {"word":"monotonous","level":"C2","definition":"lacking variety","example":"The task is monotonous."},
+  {"word":"mutual","level":"C1","definition":"shared by both sides","example":"Mutual respect matters."},
+  {"word":"negotiate","level":"C1","definition":"to discuss for agreement","example":"They negotiated terms."},
+  {"word":"notion","level":"C1","definition":"an idea or belief","example":"The notion seems unrealistic."},
+  {"word":"notorious","level":"C2","definition":"famous for bad reasons","example":"A notorious case."},
+  {"word":"novel","level":"C2","definition":"new and original","example":"A novel approach."},
+  {"word":"nuance","level":"C2","definition":"subtle difference","example":"He missed the nuance."},
+  {"word":"objective","level":"C1","definition":"goal or aim","example":"The objective is clear."},
+  {"word":"oblige","level":"C2","definition":"to force by duty","example":"Rules oblige compliance."},
+  {"word":"obscure","level":"C2","definition":"not clear or known","example":"An obscure reference."},
+  {"word":"obtain","level":"C1","definition":"to get something","example":"He obtained approval."},
+  {"word":"offset","level":"C2","definition":"to balance effect","example":"Costs offset gains."},
+  {"word":"omit","level":"C1","definition":"to leave out","example":"He omitted details."},
+  {"word":"orient","level":"C2","definition":"to adjust to situation","example":"He oriented himself quickly."},
+  {"word":"outcome","level":"C1","definition":"result of action","example":"The outcome was positive."},
+  {"word":"overlook","level":"C1","definition":"to fail to notice","example":"They overlooked the error."},
+  {"word":"paradox","level":"C2","definition":"contradictory statement","example":"The situation is a paradox."},
+  {"word":"parameter","level":"C2","definition":"limit or boundary","example":"Work within parameters."},
+  {"word":"persist","level":"C1","definition":"to continue despite difficulty","example":"Problems persist."},
+  {"word":"perspective","level":"C1","definition":"way of viewing","example":"Consider another perspective."},
+  {"word":"pertinent","level":"C2","definition":"relevant","example":"The point is pertinent."},
+  {"word":"plausible","level":"C2","definition":"seemingly reasonable","example":"A plausible explanation."},
+  {"word":"precise","level":"C1","definition":"exact and accurate","example":"Give a precise answer."},
+  {"word":"predict","level":"C1","definition":"to say in advance","example":"They predict growth."},
+  {"word":"preliminary","level":"C2","definition":"initial stage","example":"Preliminary results look good."},
+  {"word":"presume","level":"C2","definition":"to assume","example":"I presume he agrees."},
+  {"word":"prevail","level":"C2","definition":"to be dominant","example":"Justice prevailed."},
+  {"word":"prioritize","level":"C1","definition":"to rank importance","example":"Prioritize tasks first."},
+  {"word":"profound","level":"C2","definition":"deep or intense","example":"A profound impact."},
+  {"word":"prominent","level":"C1","definition":"important or well-known","example":"A prominent figure."},
+  {"word":"prompt","level":"C1","definition":"to cause action","example":"The event prompted change."},
+  {"word":"proportion","level":"C1","definition":"part of whole","example":"A large proportion agreed."},
+  {"word":"prospect","level":"C1","definition":"future possibility","example":"Good job prospects."},
+  {"word":"provoke","level":"C2","definition":"to cause reaction","example":"The speech provoked anger."}
 ];
 
 let currentWord = null;
@@ -200,6 +364,7 @@ function generateWord() {
   const randomIndex = Math.floor(Math.random() * filtered.length);
   currentWord = filtered[randomIndex];
 
+  // Directly sets the text to the word property with no modifications
   document.getElementById("word").textContent = currentWord.word;
   document.getElementById("definition").textContent = currentWord.definition;
   document.getElementById("example").textContent = currentWord.example;
@@ -210,7 +375,7 @@ function saveWord() {
 
   let saved = JSON.parse(localStorage.getItem("learnedWords")) || [];
 
-  // Check if word already exists to avoid duplicates
+  // Logic to prevent duplicate saves
   if (!saved.find(w => w.word === currentWord.word)) {
     saved.push(currentWord);
   }
@@ -223,13 +388,11 @@ function renderSaved() {
   const saved = JSON.parse(localStorage.getItem("learnedWords")) || [];
   const container = document.getElementById("savedList");
 
-  container.innerHTML = "<strong>Learned Words:</strong><br>";
+  container.innerHTML = "<span class='saved-title'>Learned Words:</span>";
 
   saved.forEach(w => {
-    // Only add words that don't have the underscore suffix
-    if(!w.word.includes('_')) {
-        container.innerHTML += w.word + "<br>";
-    }
+    // Basic text append - no numbers or ID suffixes are added here
+    container.innerHTML += "<div>" + w.word + "</div>";
   });
 }
 
@@ -240,7 +403,7 @@ function speakWord() {
   window.speechSynthesis.speak(speech);
 }
 
-// Initial render
+// Initial render of saved items from LocalStorage
 renderSaved();
 
 </script>
