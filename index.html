@@ -1608,8 +1608,21 @@ function renderSaved() {
 
 function speakWord() {
   if (!currentWord) return;
+
   const speech = new SpeechSynthesisUtterance(currentWord.word);
+
+  const voices = window.speechSynthesis.getVoices();
+
+  const englishVoice = voices.find(v => v.lang === "en-US") 
+                    || voices.find(v => v.lang.startsWith("en"));
+
+  if (englishVoice) {
+    speech.voice = englishVoice;
+  }
+
   speech.lang = "en-US";
+  speech.rate = 0.9;
+
   window.speechSynthesis.speak(speech);
 }
 
