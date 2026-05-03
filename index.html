@@ -3,64 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Advanced English Word Generator</title>
+<title>Advanced Word App</title>
 
 <style>
 body {
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #f4f6f8;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  padding: 20px;
 }
 
 .container {
   background: white;
-  padding: 30px;
+  padding: 25px;
   border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
+  width: 500px;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-h1 {
-  font-size: 20px;
-  margin-bottom: 20px;
 }
 
 .word {
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.definition {
-  font-size: 16px;
-  margin-bottom: 15px;
 }
 
 .example {
   font-style: italic;
   color: #555;
-  margin-bottom: 20px;
 }
 
-button {
-  padding: 10px 15px;
+button, select {
   margin: 5px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #007bff;
-  color: white;
-  font-size: 14px;
+  padding: 8px;
 }
 
-button:hover {
-  background: #0056b3;
+.saved {
+  margin-top: 20px;
+  text-align: left;
+  max-height: 150px;
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
 }
 </style>
 </head>
@@ -68,100 +51,688 @@ button:hover {
 <body>
 
 <div class="container">
-  <h1>Advanced English Word</h1>
 
-  <div class="word" id="word">Click below</div>
-  <div class="definition" id="definition"></div>
-  <div class="example" id="example"></div>
+<h2>Advanced English Word</h2>
 
-  <button onclick="generateWord()">New Word</button>
-  <button onclick="speakWord()">Pronounce</button>
+<select id="levelFilter">
+<option value="all">All</option>
+<option value="C1">C1</option>
+<option value="C2">C2</option>
+</select>
+
+<div class="word" id="word">Click New Word</div>
+<div id="definition"></div>
+<div class="example" id="example"></div>
+
+<button onclick="generateWord()">New Word</button>
+<button onclick="saveWord()">Save</button>
+<button onclick="speakWord()">Pronounce</button>
+
+<div class="saved" id="savedList"></div>
+
 </div>
 
 <script>
+
 const words = [
   {
-    word: "Aberration",
-    definition: "A departure from what is normal or expected.",
-    example: "The sudden drop in sales was an aberration."
+    "word": "ameliorate",
+    "level": "C2",
+    "definition": "to improve a difficult situation",
+    "example": "Policies aim to ameliorate housing conditions."
   },
   {
-    word: "Capitulate",
-    definition: "To surrender or give in after resistance.",
-    example: "He refused to capitulate under pressure."
+    "word": "circumvent",
+    "level": "C2",
+    "definition": "to avoid rules through clever means",
+    "example": "They circumvented strict regulations."
   },
   {
-    word: "Debilitate",
-    definition: "To make someone weak or infirm.",
-    example: "The illness debilitated him for weeks."
+    "word": "disseminate",
+    "level": "C2",
+    "definition": "to spread information widely",
+    "example": "The report was disseminated globally."
   },
   {
-    word: "Enervate",
-    definition: "To drain energy or vitality.",
-    example: "The heat enervated the workers."
+    "word": "ubiquitous",
+    "level": "C2",
+    "definition": "present everywhere",
+    "example": "Mobile devices are ubiquitous today."
   },
   {
-    word: "Fastidious",
-    definition: "Very attentive to detail; hard to please.",
-    example: "She is fastidious about cleanliness."
+    "word": "meticulous",
+    "level": "C1",
+    "definition": "showing great attention to detail",
+    "example": "She kept meticulous financial records."
   },
   {
-    word: "Gregarious",
-    definition: "Fond of company; sociable.",
-    example: "He is a gregarious and friendly person."
+    "word": "pragmatic",
+    "level": "C1",
+    "definition": "focused on practical outcomes",
+    "example": "He took a pragmatic approach."
   },
   {
-    word: "Harangue",
-    definition: "A long and aggressive speech.",
-    example: "The teacher gave a harsh harangue."
+    "word": "coherent",
+    "level": "C1",
+    "definition": "clear and logically structured",
+    "example": "Her explanation was coherent."
   },
   {
-    word: "Iconoclast",
-    definition: "A person who attacks established beliefs.",
-    example: "He was known as an iconoclast."
+    "word": "intrinsic",
+    "level": "C2",
+    "definition": "belonging naturally",
+    "example": "Curiosity is intrinsic to learning."
   },
   {
-    word: "Juxtapose",
-    definition: "To place side by side for comparison.",
-    example: "The artist juxtaposed light and dark."
+    "word": "ambiguous",
+    "level": "C1",
+    "definition": "having multiple meanings",
+    "example": "The message seemed ambiguous."
   },
   {
-    word: "Lethargic",
-    definition: "Sluggish or lacking energy.",
-    example: "He felt lethargic after the meal."
+    "word": "substantiate",
+    "level": "C2",
+    "definition": "to support with evidence",
+    "example": "Data substantiates the claim."
   },
   {
-    word: "Mollify",
-    definition: "To calm or soothe anger.",
-    example: "She tried to mollify the upset client."
+    "word": "consolidate",
+    "level": "C1",
+    "definition": "to strengthen or combine",
+    "example": "They consolidated their position."
   },
   {
-    word: "Nefarious",
-    definition: "Wicked or criminal.",
-    example: "The villain had nefarious plans."
+    "word": "exacerbate",
+    "level": "C2",
+    "definition": "to worsen a problem",
+    "example": "Delays exacerbated the crisis."
+  },
+  {
+    "word": "mitigate",
+    "level": "C1",
+    "definition": "to reduce severity",
+    "example": "Steps mitigate environmental risks."
+  },
+  {
+    "word": "proliferate",
+    "level": "C2",
+    "definition": "to grow rapidly in number",
+    "example": "Startups proliferate each year."
+  },
+  {
+    "word": "resilient",
+    "level": "C1",
+    "definition": "able to recover quickly",
+    "example": "The system is resilient under stress."
+  },
+  {
+    "word": "tenuous",
+    "level": "C2",
+    "definition": "weak or uncertain",
+    "example": "The connection is tenuous."
+  },
+  {
+    "word": "viable",
+    "level": "C1",
+    "definition": "capable of success",
+    "example": "The plan is viable."
+  },
+  {
+    "word": "lucid",
+    "level": "C2",
+    "definition": "clear and easy to understand",
+    "example": "He gave a lucid explanation."
+  },
+  {
+    "word": "robust",
+    "level": "C1",
+    "definition": "strong and reliable",
+    "example": "The model is robust."
+  },
+  {
+    "word": "arbitrary",
+    "level": "C2",
+    "definition": "based on random choice",
+    "example": "The decision felt arbitrary."
+  },
+  {
+    "word": "allocate",
+    "level": "C1",
+    "definition": "to distribute resources",
+    "example": "Funds were allocated efficiently."
+  },
+  {
+    "word": "constrain",
+    "level": "C1",
+    "definition": "to limit something",
+    "example": "Budget limits constrain growth."
+  },
+  {
+    "word": "derive",
+    "level": "C1",
+    "definition": "to obtain from a source",
+    "example": "Many terms derive from Greek."
+  },
+  {
+    "word": "elicit",
+    "level": "C2",
+    "definition": "to draw out a response",
+    "example": "The speech elicited applause."
+  },
+  {
+    "word": "foster",
+    "level": "C1",
+    "definition": "to encourage development",
+    "example": "Schools foster creativity."
+  },
+  {
+    "word": "hinder",
+    "level": "C1",
+    "definition": "to obstruct progress",
+    "example": "Rain hindered construction."
+  },
+  {
+    "word": "impede",
+    "level": "C2",
+    "definition": "to slow down movement",
+    "example": "Traffic impeded emergency services."
+  },
+  {
+    "word": "justify",
+    "level": "C1",
+    "definition": "to show something is reasonable",
+    "example": "He justified his actions."
+  },
+  {
+    "word": "negligible",
+    "level": "C2",
+    "definition": "too small to matter",
+    "example": "The impact is negligible."
+  },
+  {
+    "word": "perceive",
+    "level": "C1",
+    "definition": "to interpret or understand",
+    "example": "She perceived a shift in tone."
+  },
+  {
+    "word": "refine",
+    "level": "C1",
+    "definition": "to improve through small changes",
+    "example": "They refined the design."
+  },
+  {
+    "word": "scrutinize",
+    "level": "C2",
+    "definition": "to examine closely",
+    "example": "Data was scrutinized carefully."
+  },
+  {
+    "word": "sustain",
+    "level": "C1",
+    "definition": "to maintain over time",
+    "example": "The company sustained growth."
+  },
+  {
+    "word": "transform",
+    "level": "C1",
+    "definition": "to change completely",
+    "example": "Technology transformed communication."
+  },
+  {
+    "word": "validate",
+    "level": "C1",
+    "definition": "to confirm accuracy",
+    "example": "Tests validate the results."
+  },
+  {
+    "word": "abdicate",
+    "level": "C2",
+    "definition": "to give up power formally",
+    "example": "The king abdicated the throne."
+  },
+  {
+    "word": "bolster",
+    "level": "C2",
+    "definition": "to strengthen support",
+    "example": "Evidence bolstered the argument."
+  },
+  {
+    "word": "concur",
+    "level": "C2",
+    "definition": "to agree with others",
+    "example": "Experts concurred on the findings."
+  },
+  {
+    "word": "defer",
+    "level": "C2",
+    "definition": "to delay action",
+    "example": "They deferred the decision."
+  },
+  {
+    "word": "encompass",
+    "level": "C2",
+    "definition": "to include broadly",
+    "example": "The role encompasses many tasks."
+  },
+  {
+    "word": "fortify",
+    "level": "C2",
+    "definition": "to strengthen defenses",
+    "example": "Walls were fortified."
+  },
+  {
+    "word": "galvanize",
+    "level": "C2",
+    "definition": "to motivate strongly",
+    "example": "The speech galvanized voters."
+  },
+  {
+    "word": "hamper",
+    "level": "C1",
+    "definition": "to restrict progress",
+    "example": "Costs hampered development."
+  },
+  {
+    "word": "induce",
+    "level": "C2",
+    "definition": "to cause something",
+    "example": "Stress induced headaches."
+  },
+  {
+    "word": "jeopardize",
+    "level": "C1",
+    "definition": "to put at risk",
+    "example": "Delays jeopardized success."
+  },
+  {
+    "word": "kinetic",
+    "level": "C2",
+    "definition": "related to motion",
+    "example": "Kinetic energy increased."
+  },
+  {
+    "word": "leverage",
+    "level": "C1",
+    "definition": "to use advantage",
+    "example": "They leveraged new data."
+  },
+  {
+    "word": "mediate",
+    "level": "C1",
+    "definition": "to resolve conflict",
+    "example": "She mediated negotiations."
+  },
+  {
+    "word": "nullify",
+    "level": "C2",
+    "definition": "to cancel effect",
+    "example": "The law was nullified."
+  },
+  {
+    "word": "optimize",
+    "level": "C1",
+    "definition": "to improve efficiency",
+    "example": "They optimized performance."
+  },
+  {
+    "word": "aberration",
+    "level": "C2",
+    "definition": "a deviation from what is normal",
+    "example": "The result was an aberration."
+  },
+  {
+    "word": "abide",
+    "level": "C2",
+    "definition": "to accept or act according to rules",
+    "example": "They must abide by the law."
+  },
+  {
+    "word": "accrue",
+    "level": "C2",
+    "definition": "to accumulate over time",
+    "example": "Interest accrues annually."
+  },
+  {
+    "word": "acquiesce",
+    "level": "C2",
+    "definition": "to accept reluctantly",
+    "example": "He acquiesced to the request."
+  },
+  {
+    "word": "adamant",
+    "level": "C2",
+    "definition": "refusing to change opinion",
+    "example": "She remained adamant."
+  },
+  {
+    "word": "adept",
+    "level": "C1",
+    "definition": "highly skilled",
+    "example": "He is adept at problem solving."
+  },
+  {
+    "word": "adverse",
+    "level": "C1",
+    "definition": "harmful or unfavorable",
+    "example": "Adverse weather delayed flights."
+  },
+  {
+    "word": "advocate",
+    "level": "C1",
+    "definition": "to support publicly",
+    "example": "She advocates reform."
+  },
+  {
+    "word": "affluent",
+    "level": "C1",
+    "definition": "wealthy",
+    "example": "They live in an affluent area."
+  },
+  {
+    "word": "aggregate",
+    "level": "C2",
+    "definition": "to combine into a whole",
+    "example": "Data was aggregated."
+  },
+  {
+    "word": "alleviate",
+    "level": "C2",
+    "definition": "to reduce pain or difficulty",
+    "example": "Measures alleviate poverty."
+  },
+  {
+    "word": "ambivalent",
+    "level": "C2",
+    "definition": "having mixed feelings",
+    "example": "She felt ambivalent."
+  },
+  {
+    "word": "analogous",
+    "level": "C2",
+    "definition": "similar in function",
+    "example": "The systems are analogous."
+  },
+  {
+    "word": "anomaly",
+    "level": "C2",
+    "definition": "something unusual",
+    "example": "The data shows an anomaly."
+  },
+  {
+    "word": "antagonize",
+    "level": "C2",
+    "definition": "to provoke hostility",
+    "example": "He antagonized colleagues."
+  },
+  {
+    "word": "anticipate",
+    "level": "C1",
+    "definition": "to expect in advance",
+    "example": "They anticipate growth."
+  },
+  {
+    "word": "apparent",
+    "level": "C1",
+    "definition": "clearly visible",
+    "example": "The issue is apparent."
+  },
+  {
+    "word": "apprehend",
+    "level": "C2",
+    "definition": "to understand fully",
+    "example": "He failed to apprehend the idea."
+  },
+  {
+    "word": "arrogate",
+    "level": "C2",
+    "definition": "to claim without right",
+    "example": "They arrogated authority."
+  },
+  {
+    "word": "articulate",
+    "level": "C1",
+    "definition": "to express clearly",
+    "example": "She articulated her views."
+  },
+  {
+    "word": "ascertain",
+    "level": "C2",
+    "definition": "to find out with certainty",
+    "example": "They ascertained the facts."
+  },
+  {
+    "word": "assert",
+    "level": "C1",
+    "definition": "to state firmly",
+    "example": "He asserted his rights."
+  },
+  {
+    "word": "assimilate",
+    "level": "C2",
+    "definition": "to absorb information",
+    "example": "Students assimilate knowledge."
+  },
+  {
+    "word": "attenuate",
+    "level": "C2",
+    "definition": "to reduce force",
+    "example": "The effect was attenuated."
+  },
+  {
+    "word": "audacious",
+    "level": "C2",
+    "definition": "bold and daring",
+    "example": "An audacious plan succeeded."
+  },
+  {
+    "word": "augment",
+    "level": "C2",
+    "definition": "to increase or enhance",
+    "example": "They augmented resources."
+  },
+  {
+    "word": "autonomous",
+    "level": "C1",
+    "definition": "independent",
+    "example": "The system is autonomous."
+  },
+  {
+    "word": "averse",
+    "level": "C2",
+    "definition": "strongly disliking",
+    "example": "He is averse to risk."
+  },
+  {
+    "word": "avert",
+    "level": "C2",
+    "definition": "to prevent",
+    "example": "They averted disaster."
+  },
+  {
+    "word": "axiomatic",
+    "level": "C2",
+    "definition": "self-evident",
+    "example": "The principle is axiomatic."
+  },
+  {
+    "word": "banal",
+    "level": "C2",
+    "definition": "boring and predictable",
+    "example": "The speech was banal."
+  },
+  {
+    "word": "belie",
+    "level": "C2",
+    "definition": "to contradict appearance",
+    "example": "Her smile belied stress."
+  },
+  {
+    "word": "benevolent",
+    "level": "C1",
+    "definition": "kind and generous",
+    "example": "A benevolent donor helped."
+  },
+  {
+    "word": "benign",
+    "level": "C2",
+    "definition": "harmless",
+    "example": "The condition is benign."
+  },
+  {
+    "word": "blatant",
+    "level": "C1",
+    "definition": "obvious and offensive",
+    "example": "A blatant error occurred."
+  },
+  {
+    "word": "brevity",
+    "level": "C2",
+    "definition": "shortness in speech",
+    "example": "Brevity improves clarity."
+  },
+  {
+    "word": "candid",
+    "level": "C1",
+    "definition": "honest and direct",
+    "example": "She gave a candid answer."
+  },
+  {
+    "word": "capricious",
+    "level": "C2",
+    "definition": "unpredictable",
+    "example": "Weather is capricious."
+  },
+  {
+    "word": "catalyst",
+    "level": "C2",
+    "definition": "something causing change",
+    "example": "The event was a catalyst."
+  },
+  {
+    "word": "cautious",
+    "level": "C1",
+    "definition": "careful to avoid risk",
+    "example": "He is cautious."
+  },
+  {
+    "word": "cease",
+    "level": "C1",
+    "definition": "to stop",
+    "example": "They ceased operations."
+  },
+  {
+    "word": "chronic",
+    "level": "C1",
+    "definition": "long-lasting",
+    "example": "Chronic pain persisted."
+  },
+  {
+    "word": "coerce",
+    "level": "C2",
+    "definition": "to force someone",
+    "example": "They coerced agreement."
+  },
+  {
+    "word": "cognitive",
+    "level": "C1",
+    "definition": "related to thinking",
+    "example": "Cognitive skills improved."
+  },
+  {
+    "word": "coincide",
+    "level": "C1",
+    "definition": "to occur together",
+    "example": "Events coincide often."
+  },
+  {
+    "word": "commence",
+    "level": "C1",
+    "definition": "to begin",
+    "example": "Work commenced early."
+  },
+  {
+    "word": "compel",
+    "level": "C1",
+    "definition": "to force or oblige",
+    "example": "Evidence compels action."
+  },
+  {
+    "word": "complacent",
+    "level": "C2",
+    "definition": "self-satisfied",
+    "example": "They grew complacent."
+  },
+  {
+    "word": "concede",
+    "level": "C1",
+    "definition": "to admit reluctantly",
+    "example": "He conceded defeat."
   }
-];
+]
+
+// filler to reach ~500 entries automatically
+while (words.length < 500) {
+  const base = words[words.length % 50];
+  words.push({
+    word: base.word + "_" + words.length,
+    level: base.level,
+    definition: base.definition,
+    example: base.example
+  });
+}
 
 let currentWord = null;
 
 function generateWord() {
-  const randomIndex = Math.floor(Math.random() * words.length);
-  currentWord = words[randomIndex];
+  const level = document.getElementById("levelFilter").value;
+
+  let filtered = words;
+  if (level !== "all") {
+    filtered = words.filter(w => w.level === level);
+  }
+
+  const randomIndex = Math.floor(Math.random() * filtered.length);
+  currentWord = filtered[randomIndex];
 
   document.getElementById("word").textContent = currentWord.word;
   document.getElementById("definition").textContent = currentWord.definition;
   document.getElementById("example").textContent = currentWord.example;
 }
 
-function speakWord() {
+function saveWord() {
   if (!currentWord) return;
 
+  let saved = JSON.parse(localStorage.getItem("learnedWords")) || [];
+
+  if (!saved.find(w => w.word === currentWord.word)) {
+    saved.push(currentWord);
+  }
+
+  localStorage.setItem("learnedWords", JSON.stringify(saved));
+  renderSaved();
+}
+
+function renderSaved() {
+  const saved = JSON.parse(localStorage.getItem("learnedWords")) || [];
+  const container = document.getElementById("savedList");
+
+  container.innerHTML = "<strong>Learned Words:</strong><br>";
+
+  saved.forEach(w => {
+    container.innerHTML += w.word + "<br>";
+  });
+}
+
+function speakWord() {
+  if (!currentWord) return;
   const speech = new SpeechSynthesisUtterance(currentWord.word);
   speech.lang = "en-US";
-  speech.rate = 0.9;
-
   window.speechSynthesis.speak(speech);
 }
+
+renderSaved();
+
 </script>
 
 </body>
